@@ -20,8 +20,11 @@ namespace ExampleProject
         [EditorInfo("unsigned flag", ValueEnums.ValueType.UintFlag)]
         public uint UintValue { get; set; } = 2;
 
-        [EditorInfo("float", ValueEnums.ValueType.Float)]
-        public float FloatValue { get; set; } = 3.5f;
+        [EditorInfo("float1", ValueEnums.ValueType.Float)]
+        public float FloatValue1 { get; set; } = 3.5f;
+
+        [EditorInfo("float2", ValueEnums.ValueType.Float)]
+        public float FloatValue2 { get; set; } = 0.5f;
 
         [EditorInfo("string1", ValueEnums.ValueType.String)]
         public string TextValue { get; set; } = "sample text";

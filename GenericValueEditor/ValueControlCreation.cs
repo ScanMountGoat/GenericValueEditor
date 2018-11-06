@@ -64,7 +64,7 @@ namespace GenericValueEditor
                     };
 
                     // Set text box to update track bar.
-                    intTrackBar.TextChanged += (sender, args) =>
+                    intTextBox.TextChanged += (sender, args) =>
                     {
                         if (valueByName[name].EnableTrackBarUpdates)
                             TrackBarUtils.SetInt((int)valueByName[name].Value, intTrackBar, -128, 128);
@@ -265,16 +265,16 @@ namespace GenericValueEditor
             };
  
             tableLayout.SuspendLayout();
-            tableLayout.Controls.Clear();
-            tableLayout.ColumnStyles.Clear();
 
             // TODO: This scaling only sort of works.
+            tableLayout.ColumnStyles.Clear();
             tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10));
             for (int i = 1; i < tableLayout.ColumnCount; i++)
             {
                 ColumnStyle style = new ColumnStyle(SizeType.Percent, 100 / tableLayout.ColumnCount);
                 tableLayout.ColumnStyles.Add(style);
             }
+
             tableLayout.ResumeLayout();
             return tableLayout;
         }
