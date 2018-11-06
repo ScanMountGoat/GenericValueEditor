@@ -12,7 +12,8 @@ namespace GenericValueEditor.ControlCreation
             var control = new ComboBox()
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
-                Anchor = AnchorStyles.Right | AnchorStyles.Left
+                Anchor = AnchorStyles.Right | AnchorStyles.Left,
+                Width = 150
             };
 
             // TODO: Throw exception if it isn't an enum.

@@ -90,7 +90,6 @@ namespace GenericValueEditor.ControlCreation
             var tableLayout = new TableLayoutPanel()
             {
                 Dock = DockStyle.Fill,
-                CellBorderStyle = TableLayoutPanelCellBorderStyle.Single,
                 RowCount = 1,
                 ColumnCount = columnCount
             };
@@ -99,10 +98,9 @@ namespace GenericValueEditor.ControlCreation
 
             // TODO: This scaling only sort of works.
             tableLayout.ColumnStyles.Clear();
-            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10));
-            for (int i = 1; i < tableLayout.ColumnCount; i++)
+            for (int i = 0; i < tableLayout.ColumnCount; i++)
             {
-                ColumnStyle style = new ColumnStyle(SizeType.Percent, 100 / tableLayout.ColumnCount);
+                ColumnStyle style = new ColumnStyle(SizeType.AutoSize, 100 / tableLayout.ColumnCount);
                 tableLayout.ColumnStyles.Add(style);
             }
 

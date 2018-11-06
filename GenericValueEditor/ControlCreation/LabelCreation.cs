@@ -10,8 +10,9 @@ namespace GenericValueEditor.ControlCreation
             var label = new Label()
             {
                 Text = text,
-                AutoSize = true,
-                Anchor = AnchorStyles.Right
+                Width = 100,
+                //AutoSize = true,
+                Anchor = AnchorStyles.Right,
             };
 
             tableLayout.Controls.Add(label, col, row);

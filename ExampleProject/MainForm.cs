@@ -18,5 +18,10 @@ namespace ExampleProject
         {
             System.Diagnostics.Debug.WriteLine(objectToEdit.ToString());
         }
+
+        private void flowLayoutPanel1_Resize(object sender, System.EventArgs e)
+        {
+            GenericValueEditor.Utils.GuiUtils.ScaleControlsHorizontallyToLayoutWidth(flowLayoutPanel1);
+        }
     }
 }
