@@ -24,7 +24,7 @@ namespace ExampleProject
         public float FloatValue1 { get; set; } = 3.5f;
 
         [EditorInfo("float2", ValueEnums.ValueType.Float)]
-        public float FloatValue2 { get; set; } = 0.5f;
+        public float floatField = 0.5f;
 
         [EditorInfo("string1", ValueEnums.ValueType.String)]
         public string TextValue { get; set; } = "sample text";

@@ -17,11 +17,12 @@ namespace GenericValueEditor
         /// <param name="objectToEdit"></param>
         public ObjectEditor(object objectToEdit)
         {
-            InitializeProperties(objectToEdit);
+            InitializeEditableProperties(objectToEdit);
+            InitializeEditableFields(objectToEdit);
         }
 
         /// <summary>
-        /// 
+        /// Adds controls to <paramref name="parent"/> to edit all the marked properties and fields of the given object.
         /// </summary>
         /// <param name="parent">The control to which the editor controls will be added</param>
         public void AddEditorControls(System.Windows.Forms.Control parent)
@@ -32,7 +33,7 @@ namespace GenericValueEditor
             }
         }
 
-        private void InitializeProperties(object objectToEdit)
+        private void InitializeEditableProperties(object objectToEdit)
         {
             // Determine what types to use based on reflection and attributes for the given class.
             Type type = objectToEdit.GetType();
@@ -53,12 +54,42 @@ namespace GenericValueEditor
             }
         }
 
+        private void InitializeEditableFields(object objectToEdit)
+        {
+            // Determine what types to use based on reflection and attributes for the given class.
+            Type type = objectToEdit.GetType();
+            foreach (var field in type.GetFields())
+            {
+                foreach (var attribute in field.GetCustomAttributes(true))
+                {
+                    if (!(attribute is EditorInfo))
+                        continue;
+
+                    EditorInfo info = (EditorInfo)attribute;
+
+                    var editorValue = new EditorValue(field.GetValue(objectToEdit), info.Type);
+                    valueByName.Add(info.Name, editorValue);
+
+                    SetUpObjectUpdateOnValueChange(objectToEdit, field, editorValue);
+                }
+            }
+        }
+
         private static void SetUpObjectUpdateOnValueChange(object objectToEdit, System.Reflection.PropertyInfo property, EditorValue editorValue)
         {
             // Modify the object's property value.
             editorValue.OnValueChanged += (sender, args) =>
             {
                 property.SetValue(objectToEdit, Convert.ChangeType(editorValue.Value, property.PropertyType), null);
+            };
+        }
+
+        private static void SetUpObjectUpdateOnValueChange(object objectToEdit, System.Reflection.FieldInfo field, EditorValue editorValue)
+        {
+            // Modify the object's property value.
+            editorValue.OnValueChanged += (sender, args) =>
+            {
+                field.SetValue(objectToEdit, Convert.ChangeType(editorValue.Value, field.FieldType));
             };
         }
     }
