@@ -28,7 +28,7 @@ namespace GenericValueEditor
         {
             foreach (var editorValue in valueByName)
             {
-                ValueControlCreation.AddPropertyControls(editorValue.Key, editorValue.Value.Type, parent, valueByName);
+                ControlCreation.ValueControlCreation.AddPropertyControls(editorValue.Key, editorValue.Value.Type, parent, valueByName);
             }
         }
 

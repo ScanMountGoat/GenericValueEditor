@@ -49,6 +49,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ControlCreation\CheckBoxCreation.cs" />
+    <Compile Include="ControlCreation\ComboBoxCreation.cs" />
+    <Compile Include="ControlCreation\LabelCreation.cs" />
+    <Compile Include="ControlCreation\TextBoxCreation.cs" />
+    <Compile Include="ControlCreation\TrackBarCreation.cs" />
     <Compile Include="EditorInfo.cs" />
     <Compile Include="EditorValue.cs" />
     <Compile Include="ObjectEditor.cs" />
@@ -56,7 +61,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\TextBoxUtils.cs" />
     <Compile Include="Utils\TrackBarUtils.cs" />
-    <Compile Include="ValueControlCreation.cs" />
+    <Compile Include="ControlCreation\ValueControlCreation.cs" />
     <Compile Include="ValueEnums.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
