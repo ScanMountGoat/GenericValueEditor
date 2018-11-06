@@ -18,6 +18,9 @@
 
         public ValueEnums.ValueType Type { get; }
 
+        // Prevents the text box from updating the track bar.
+        public bool EnableTrackBarUpdates { get; set; } = false;
+
         public EditorValue(object value, ValueEnums.ValueType type)
         {
             valueObject = value;

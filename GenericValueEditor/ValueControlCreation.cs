@@ -7,10 +7,6 @@ namespace GenericValueEditor
 {
     static class ValueControlCreation
     {
-        // Prevents the text box from updating the track bar.
-        // TODO: Don't make this static.
-        private static bool enableTrackBarUpdates = false;
-
         public static void AddPropertyControls(string name, ValueEnums.ValueType type, Control parent, 
             Dictionary<string, EditorValue> valueByName)
         {
@@ -40,27 +36,39 @@ namespace GenericValueEditor
                     break;
                 case ValueEnums.ValueType.Float:
                     AddLabel(tableLayout, 0, 0, name);
-                    var textBox = AddTextBox(tableLayout, type, 0, 1, name, valueByName);
-                    var trackBar = AddTrackBar(tableLayout, type, 0, 2, name, valueByName);
+                    var floatTextBox = AddTextBox(tableLayout, type, 0, 1, name, valueByName);
+                    var floatTrackBar = AddTrackBar(tableLayout, type, 0, 2, name, valueByName);
 
                     // Set track bar to update text box.
-                    trackBar.Scroll += (sender, args) =>
+                    floatTrackBar.Scroll += (sender, args) =>
                     {
-                        if (textBox != null)
-                            textBox.Text = TrackBarUtils.GetFloat(trackBar, 0, 1).ToString();
+                        floatTextBox.Text = TrackBarUtils.GetFloat(floatTrackBar, 0, 1).ToString();
                     };
 
                     // Set text box to update track bar.
-                    textBox.TextChanged += (sender, args) =>
+                    floatTextBox.TextChanged += (sender, args) =>
                     {
-                        // TODO: Don't hard code floats.
-                        if (enableTrackBarUpdates)
-                            TrackBarUtils.SetFloat((float)valueByName[name].Value, trackBar, 0, 1);
+                        if (valueByName[name].EnableTrackBarUpdates)
+                            TrackBarUtils.SetFloat((float)valueByName[name].Value, floatTrackBar, 0, 1);
                     };
                     break;
                 case ValueEnums.ValueType.Int:
                     AddLabel(tableLayout, 0, 0, name);
-                    AddTextBox(tableLayout, type, 0, 1, name, valueByName);
+                    var intTextBox = AddTextBox(tableLayout, type, 0, 1, name, valueByName);
+                    var intTrackBar = AddTrackBar(tableLayout, type, 0, 2, name, valueByName);
+
+                    // Set track bar to update text box.
+                    intTrackBar.Scroll += (sender, args) =>
+                    {
+                        intTextBox.Text = TrackBarUtils.GetInt(intTrackBar, -128, 128).ToString();
+                    };
+
+                    // Set text box to update track bar.
+                    intTrackBar.TextChanged += (sender, args) =>
+                    {
+                        if (valueByName[name].EnableTrackBarUpdates)
+                            TrackBarUtils.SetInt((int)valueByName[name].Value, intTrackBar, -128, 128);
+                    };
                     break;
                 case ValueEnums.ValueType.Bool:
                     AddCheckBox(tableLayout, 0, 0, name, valueByName);
@@ -188,7 +196,7 @@ namespace GenericValueEditor
                 case ValueEnums.ValueType.Float:
                     control.Scroll += (sender, args) =>
                     {
-                        enableTrackBarUpdates = false;
+                        valueByName[name].EnableTrackBarUpdates = false;
                         float newValue = TrackBarUtils.GetFloat(control, 0, 1);
                         valueByName[name].Value = newValue;
                     };
@@ -196,16 +204,16 @@ namespace GenericValueEditor
                 case ValueEnums.ValueType.Int:
                     control.Scroll += (sender, args) =>
                     {
-                        // TODO: Remap integer values.
-                        enableTrackBarUpdates = false;
-                        valueByName[name].Value = control.Value;
+                        valueByName[name].EnableTrackBarUpdates = false;
+                        int newIntValue = TrackBarUtils.GetInt(control, -128, 128);
+                        valueByName[name].Value = newIntValue;
                     };
                     break;
                 default:
                     break;
             }
 
-            control.Leave += (sender, args) => { enableTrackBarUpdates = true; };
+            control.Leave += (sender, args) => { valueByName[name].EnableTrackBarUpdates = true; };
         }
 
         private static CheckBox AddCheckBox(TableLayoutPanel tableLayout, int row, int col, 
