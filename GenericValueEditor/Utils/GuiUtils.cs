@@ -8,9 +8,9 @@ namespace GenericValueEditor.Utils
     public static class GuiUtils
     {
         /// <summary>
-        /// 
+        /// Scales all child controls to match the parent width, accounting for horizontal margins.
         /// </summary>
-        /// <param name="containerControl"></param>
+        /// <param name="containerControl">The parent control</param>
         public static void ScaleControlsHorizontallyToLayoutWidth(Control containerControl)
         {
             foreach (Control control in containerControl.Controls)
