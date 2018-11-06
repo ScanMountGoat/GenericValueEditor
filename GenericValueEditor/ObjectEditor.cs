@@ -46,7 +46,7 @@ namespace GenericValueEditor
                     EditorInfo info = (EditorInfo)attribute;
 
                     var editorValue = new EditorValue(property.GetValue(objectToEdit, null), info.Type);
-                    valueByName[info.Name] = editorValue;
+                    valueByName.Add(info.Name, editorValue);
 
                     SetUpObjectUpdateOnValueChange(objectToEdit, property, editorValue);
                 }

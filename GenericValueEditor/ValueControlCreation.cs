@@ -67,7 +67,7 @@ namespace GenericValueEditor
                     break;
                 case ValueEnums.ValueType.Enum:
                     AddLabel(tableLayout, 0, 0, name);
-                    AddComboBox(tableLayout, typeof(ValueEnums.ValueType), 0, 1, name, valueByName);
+                    AddComboBox(tableLayout, 0, 1, name, valueByName);
                     break;
                 case ValueEnums.ValueType.String:
                     AddLabel(tableLayout, 0, 0, name);
@@ -107,44 +107,44 @@ namespace GenericValueEditor
             return control;
         }
 
-        private static ComboBox AddComboBox(TableLayoutPanel tableLayout, Type enumType, int row, int col, 
+        private static ComboBox AddComboBox(TableLayoutPanel tableLayout, int row, int col, 
             string name, Dictionary<string, EditorValue> valueByName)
         {
             var control = new ComboBox()
             {
-                DropDownStyle = ComboBoxStyle.DropDownList
+                DropDownStyle = ComboBoxStyle.DropDownList,
+                Anchor = AnchorStyles.Right | AnchorStyles.Left
             };
 
-            InitializeComboBoxItems(enumType, control);
+            // TODO: Throw exception if it isn't an enum.
+            Type enumType = valueByName[name].Value.GetType();
 
-            control.SelectedItem = valueByName[name].Value.ToString();
+            InitializeComboBoxItems(valueByName, name, enumType, control);
+            CreateComboBoxChangedEvent(name, enumType, valueByName, control);
 
-            control.Anchor = AnchorStyles.Right | AnchorStyles.Left;
             tableLayout.Controls.Add(control, col, row);
-
-            CreateComboBoxChangedEvent(name, valueByName, control);
 
             return control;
         }
 
-        private static void CreateComboBoxChangedEvent(string name, Dictionary<string, EditorValue> valueByName, ComboBox control)
+        private static void CreateComboBoxChangedEvent(string name, Type enumType, Dictionary<string, EditorValue> valueByName, ComboBox control)
         {
             control.SelectedIndexChanged += (sender, args) =>
             {
-                // TODO: Don't hard code the enum type.
-                Enum.TryParse(control.SelectedItem.ToString(), out ValueEnums.ValueType value);
+                object value = Enum.Parse(enumType, control.SelectedItem.ToString());
                 valueByName[name].Value = value;
             };
         }
 
-        private static void InitializeComboBoxItems(Type enumType, ComboBox control)
+        private static void InitializeComboBoxItems(Dictionary<string, EditorValue> valueByName, string name, Type enumType, ComboBox control)
         {
-            // TODO: Throw exception if it isn't an enum.
             control.Items.Clear();
             foreach (var enumName in Enum.GetNames(enumType))
             {
                 control.Items.Add(enumName.ToString());
             }
+
+            control.SelectedItem = valueByName[name].Value.ToString();
         }
 
         private static void CreateTextChangedEvent(ValueEnums.ValueType type, string name, TextBox control, 

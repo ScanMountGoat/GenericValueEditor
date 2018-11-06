@@ -4,6 +4,14 @@ namespace ExampleProject
 {
     class SampleClass
     {
+        public enum SampleEnum
+        {
+            A,
+            B,
+            C,
+            D
+        }
+
         public int X { get; } = 5;
 
         [EditorInfo("int1", ValueEnums.ValueType.Int)]
@@ -18,9 +26,17 @@ namespace ExampleProject
         [EditorInfo("string1", ValueEnums.ValueType.String)]
         public string TextValue { get; set; } = "sample text";
 
+        [EditorInfo("enum1", ValueEnums.ValueType.Enum)]
+        public SampleEnum EnumValue { get; set; } = SampleEnum.B;
+
         public override string ToString()
         {
-            return $"{X.ToString()} {IntValue.ToString()} {UintValue.ToString()} {FloatValue.ToString()} {TextValue}";
+            string result = "";
+            foreach (var property in typeof(SampleClass).GetProperties())
+            {
+                result += $"{property.Name}: {property.GetValue(this, null).ToString()} | ";
+            }
+            return result;
         }
     }
 }
