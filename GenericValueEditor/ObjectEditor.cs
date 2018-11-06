@@ -39,15 +39,30 @@ namespace GenericValueEditor
             Type type = objectToEdit.GetType();
             foreach (var property in type.GetProperties())
             {
+                // TODO: Account for multiple attributes of the same type.
+                var editorValue = new EditorValue();
+                string name = null;
                 foreach (var attribute in property.GetCustomAttributes(true))
                 {
-                    if (!(attribute is EditorInfo))
-                        continue;
+                    if (attribute is EditorInfo)
+                    {
+                        var info = (EditorInfo)attribute;
+                        name = info.Name;
+                        editorValue.Type = info.Type;
+                    }
+                    else if (attribute is TrackBarInfo)
+                    {
+                        editorValue.TrackBarInfo = (TrackBarInfo)attribute;
+                    }
+                }
 
-                    EditorInfo info = (EditorInfo)attribute;
+                // Ignore properties with no attributes.
+                if (name != null)
+                {
+                    // Initialize the value.
+                    editorValue.Value = property.GetValue(objectToEdit, null);
 
-                    var editorValue = new EditorValue(property.GetValue(objectToEdit, null), info.Type);
-                    valueByName.Add(info.Name, editorValue);
+                    valueByName.Add(name, editorValue);
 
                     SetUpObjectUpdateOnValueChange(objectToEdit, property, editorValue);
                 }
@@ -60,15 +75,30 @@ namespace GenericValueEditor
             Type type = objectToEdit.GetType();
             foreach (var field in type.GetFields())
             {
+                // TODO: Account for multiple attributes of the same type.
+                var editorValue = new EditorValue();
+                string name = null;
                 foreach (var attribute in field.GetCustomAttributes(true))
                 {
-                    if (!(attribute is EditorInfo))
-                        continue;
+                    if (attribute is EditorInfo)
+                    {
+                        var info = (EditorInfo)attribute;
+                        name = info.Name;
+                        editorValue.Type = info.Type;
+                    }
+                    else if (attribute is TrackBarInfo)
+                    {
+                        editorValue.TrackBarInfo = (TrackBarInfo)attribute;
+                    }
+                }
 
-                    EditorInfo info = (EditorInfo)attribute;
+                // Ignore fields with no attributes.
+                if (name != null)
+                {
+                    // Initialize the value.
+                    editorValue.Value = field.GetValue(objectToEdit);
 
-                    var editorValue = new EditorValue(field.GetValue(objectToEdit), info.Type);
-                    valueByName.Add(info.Name, editorValue);
+                    valueByName.Add(name, editorValue);
 
                     SetUpObjectUpdateOnValueChange(objectToEdit, field, editorValue);
                 }

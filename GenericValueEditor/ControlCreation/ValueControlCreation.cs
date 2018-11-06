@@ -36,38 +36,16 @@ namespace GenericValueEditor.ControlCreation
                 case ValueEnums.ValueType.Float:
                     LabelCreation.AddLabel(tableLayout, 0, 0, name);
                     var floatTextBox = TextBoxCreation.AddTextBox(tableLayout, type, 0, 1, name, valueByName);
-                    var floatTrackBar = TrackBarCreation.AddTrackBar(tableLayout, type, 0, 2, name, valueByName);
-
-                    // Set track bar to update text box.
-                    floatTrackBar.Scroll += (sender, args) =>
+                    if (valueByName[name].TrackBarInfo != null)
                     {
-                        floatTextBox.Text = TrackBarUtils.GetFloat(floatTrackBar, 0, 1).ToString();
-                    };
-
-                    // Set text box to update track bar.
-                    floatTextBox.TextChanged += (sender, args) =>
-                    {
-                        if (valueByName[name].EnableTrackBarUpdates)
-                            TrackBarUtils.SetFloat((float)valueByName[name].Value, floatTrackBar, 0, 1);
-                    };
+                        SetUpFloatTrackBar(name, type, tableLayout, valueByName, floatTextBox);
+                    }
                     break;
                 case ValueEnums.ValueType.Int:
                     LabelCreation.AddLabel(tableLayout, 0, 0, name);
                     var intTextBox = TextBoxCreation.AddTextBox(tableLayout, type, 0, 1, name, valueByName);
-                    var intTrackBar = TrackBarCreation.AddTrackBar(tableLayout, type, 0, 2, name, valueByName);
-
-                    // Set track bar to update text box.
-                    intTrackBar.Scroll += (sender, args) =>
-                    {
-                        intTextBox.Text = TrackBarUtils.GetInt(intTrackBar, -128, 128).ToString();
-                    };
-
-                    // Set text box to update track bar.
-                    intTextBox.TextChanged += (sender, args) =>
-                    {
-                        if (valueByName[name].EnableTrackBarUpdates)
-                            TrackBarUtils.SetInt((int)valueByName[name].Value, intTrackBar, -128, 128);
-                    };
+                    if (valueByName[name].TrackBarInfo != null)
+                        SetUpIntTrackBar(name, type, tableLayout, valueByName, intTextBox);
                     break;
                 case ValueEnums.ValueType.Bool:
                     CheckBoxCreation.AddCheckBox(tableLayout, 0, 0, name, valueByName);
@@ -83,6 +61,45 @@ namespace GenericValueEditor.ControlCreation
                 default:
                     break;
             }
+        }
+
+        private static void SetUpFloatTrackBar(string name, ValueEnums.ValueType type, TableLayoutPanel tableLayout, Dictionary<string, EditorValue> valueByName, TextBox floatTextBox)
+        {
+            var floatTrackBar = TrackBarCreation.AddTrackBar(tableLayout, type, 0, 2, name, valueByName);
+            float min = (float)valueByName[name].TrackBarInfo.Min;
+            float max = (float)valueByName[name].TrackBarInfo.Max;
+
+            // Set track bar to update text box.
+            floatTrackBar.Scroll += (sender, args) =>
+            {
+                floatTextBox.Text = TrackBarUtils.GetFloat(floatTrackBar, min, max).ToString();
+            };
+
+            // Set text box to update track bar.
+            floatTextBox.TextChanged += (sender, args) =>
+            {
+                if (valueByName[name].EnableTrackBarUpdates)
+                    TrackBarUtils.SetFloat((float)valueByName[name].Value, floatTrackBar, min, max);
+            };
+        }
+
+        private static void SetUpIntTrackBar(string name, ValueEnums.ValueType type, TableLayoutPanel tableLayout, Dictionary<string, EditorValue> valueByName, TextBox intTextBox)
+        {
+            var intTrackBar = TrackBarCreation.AddTrackBar(tableLayout, type, 0, 2, name, valueByName);
+            int min = (int)valueByName[name].TrackBarInfo.Min;
+            int max = (int)valueByName[name].TrackBarInfo.Max;
+            // Set track bar to update text box.
+            intTrackBar.Scroll += (sender, args) =>
+            {
+                intTextBox.Text = TrackBarUtils.GetInt(intTrackBar, min, max).ToString();
+            };
+
+            // Set text box to update track bar.
+            intTextBox.TextChanged += (sender, args) =>
+            {
+                if (valueByName[name].EnableTrackBarUpdates)
+                    TrackBarUtils.SetInt((int)valueByName[name].Value, intTrackBar, min, max);
+            };
         }
 
         private static TableLayoutPanel CreatePropertyTableLayout(int columnCount)

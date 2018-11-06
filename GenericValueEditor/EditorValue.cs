@@ -16,16 +16,12 @@
         }
         object valueObject = null;
 
-        public ValueEnums.ValueType Type { get; }
+        public ValueEnums.ValueType Type { get; set; }
+
+        public TrackBarInfo TrackBarInfo { get; set; } = null;
 
         // Prevents the text box from updating the track bar.
         public bool EnableTrackBarUpdates { get; set; } = false;
-
-        public EditorValue(object value, ValueEnums.ValueType type)
-        {
-            valueObject = value;
-            Type = type;
-        }
 
         public override string ToString()
         {
