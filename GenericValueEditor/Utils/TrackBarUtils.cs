@@ -47,6 +47,37 @@ namespace GenericValueEditor.Utils
         /// <param name="minimum">The actual value for <see cref="TrackBar.Minimum"/></param>
         /// <param name="maximum">The actual value for <see cref="TrackBar.Maximum"/></param>
         /// <returns>The converted value of <paramref name="trackBar"/> based on the given closed interval</returns>
+        public static double GetDouble(TrackBar trackBar, double minimum, double maximum)
+        {
+            return RemapValue(trackBar.Value, trackBar.Minimum, trackBar.Maximum, minimum, maximum);
+        }
+
+        /// <summary>
+        /// Sets the value of <paramref name="trackBar"/> by remapping <paramref name="newValue"/> 
+        /// based on the given closed interval.
+        /// </summary>
+        /// <param name="newValue">The new value to set</param>
+        /// <param name="trackBar">The track bar whose value will be set</param>
+        /// <param name="minimum">The actual value for <see cref="TrackBar.Minimum"/></param>
+        /// <param name="maximum">The actual value for <see cref="TrackBar.Maximum"/></param>
+        public static void SetDouble(double newValue, TrackBar trackBar, double minimum, double maximum)
+        {
+            int newSliderValue = (int)RemapValue(newValue, minimum, maximum, trackBar.Minimum, trackBar.Maximum);
+            // Values outside the displayable range of the track bar are set to the track bar's min or max value. 
+            // The track bar's maximum only defines the precision. 
+            newSliderValue = Math.Min(newSliderValue, trackBar.Maximum);
+            newSliderValue = Math.Max(newSliderValue, trackBar.Minimum);
+            trackBar.Value = newSliderValue;
+        }
+
+        /// <summary>
+        /// Gets the value of <paramref name="trackBar"/> by remapping <see cref="TrackBar.Value"/>
+        /// based on the given closed interval.
+        /// </summary>
+        /// <param name="trackBar">The track bar value to convert</param>
+        /// <param name="minimum">The actual value for <see cref="TrackBar.Minimum"/></param>
+        /// <param name="maximum">The actual value for <see cref="TrackBar.Maximum"/></param>
+        /// <returns>The converted value of <paramref name="trackBar"/> based on the given closed interval</returns>
         public static int GetInt(TrackBar trackBar, int minimum, int maximum)
         {
             return RemapValue(trackBar.Value, trackBar.Minimum, trackBar.Maximum, minimum, maximum);
@@ -68,6 +99,11 @@ namespace GenericValueEditor.Utils
             newSliderValue = Math.Min(newSliderValue, trackBar.Maximum);
             newSliderValue = Math.Max(newSliderValue, trackBar.Minimum);
             trackBar.Value = newSliderValue;
+        }
+
+        private static double RemapValue(double value, double inputMin, double inputMax, double outputMin, double outputMax)
+        {
+            return outputMin + (value - inputMin) * (outputMax - outputMin) / (inputMax - inputMin);
         }
 
         private static float RemapValue(float value, float inputMin, float inputMax, float outputMin, float outputMax)

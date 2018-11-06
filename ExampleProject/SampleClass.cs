@@ -28,6 +28,10 @@ namespace ExampleProject
         [EditorInfo("float2", ValueEnums.ValueType.Float)]
         public float floatField = 0.5f;
 
+        [EditorInfo("double1", ValueEnums.ValueType.Double)]
+        [TrackBarInfo(0, 1)]
+        public double doubleField = 0.5;
+
         [EditorInfo("string1", ValueEnums.ValueType.String)]
         public string TextValue { get; set; } = "sample text sample text sample text";
 

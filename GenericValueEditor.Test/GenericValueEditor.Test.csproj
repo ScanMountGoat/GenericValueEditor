@@ -56,8 +56,10 @@
     <Compile Include="TextBoxUtilsTests\TryParseFloat.cs" />
     <Compile Include="TextBoxUtilsTests\TryParseInt.cs" />
     <Compile Include="TextBoxUtilsTests\TryParseUint.cs" />
+    <Compile Include="TrackBarUtilsTests\GetDouble.cs" />
     <Compile Include="TrackBarUtilsTests\GetFloat.cs" />
     <Compile Include="TrackBarUtilsTests\GetInt.cs" />
+    <Compile Include="TrackBarUtilsTests\SetDouble.cs" />
     <Compile Include="TrackBarUtilsTests\SetFloat.cs" />
     <Compile Include="TrackBarUtilsTests\SetInt.cs" />
   </ItemGroup>

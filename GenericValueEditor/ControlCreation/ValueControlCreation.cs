@@ -37,9 +37,13 @@ namespace GenericValueEditor.ControlCreation
                     LabelCreation.AddLabel(tableLayout, 0, 0, name);
                     var floatTextBox = TextBoxCreation.AddTextBox(tableLayout, type, 0, 1, name, valueByName);
                     if (valueByName[name].TrackBarInfo != null)
-                    {
                         SetUpFloatTrackBar(name, type, tableLayout, valueByName, floatTextBox);
-                    }
+                    break;
+                case ValueEnums.ValueType.Double:
+                    LabelCreation.AddLabel(tableLayout, 0, 0, name);
+                    var doubleTextBox = TextBoxCreation.AddTextBox(tableLayout, type, 0, 1, name, valueByName);
+                    if (valueByName[name].TrackBarInfo != null)
+                        SetUpDoubleTrackBar(name, type, tableLayout, valueByName, doubleTextBox);
                     break;
                 case ValueEnums.ValueType.Int:
                     LabelCreation.AddLabel(tableLayout, 0, 0, name);
@@ -80,6 +84,26 @@ namespace GenericValueEditor.ControlCreation
             {
                 if (valueByName[name].EnableTrackBarUpdates)
                     TrackBarUtils.SetFloat((float)valueByName[name].Value, floatTrackBar, min, max);
+            };
+        }
+
+        private static void SetUpDoubleTrackBar(string name, ValueEnums.ValueType type, TableLayoutPanel tableLayout, Dictionary<string, EditorValue> valueByName, TextBox doubleTextBox)
+        {
+            var doubleTrackBar = TrackBarCreation.AddTrackBar(tableLayout, type, 0, 2, name, valueByName);
+            double min = valueByName[name].TrackBarInfo.Min;
+            double max = valueByName[name].TrackBarInfo.Max;
+
+            // Set track bar to update text box.
+            doubleTrackBar.Scroll += (sender, args) =>
+            {
+                doubleTextBox.Text = TrackBarUtils.GetDouble(doubleTrackBar, min, max).ToString();
+            };
+
+            // Set text box to update track bar.
+            doubleTextBox.TextChanged += (sender, args) =>
+            {
+                if (valueByName[name].EnableTrackBarUpdates)
+                    TrackBarUtils.SetDouble((double)valueByName[name].Value, doubleTrackBar, min, max);
             };
         }
 

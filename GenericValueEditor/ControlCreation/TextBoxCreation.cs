@@ -26,6 +26,7 @@ namespace GenericValueEditor.ControlCreation
         private static void CreateTextChangedEvent(ValueEnums.ValueType type, string name, TextBox control,
             Dictionary<string, EditorValue> valueByName)
         {
+            // TODO: This could be simplified using Dictionary<Type, Func>.
             switch (type)
             {
                 case ValueEnums.ValueType.UintFlag:
@@ -38,6 +39,12 @@ namespace GenericValueEditor.ControlCreation
                     control.TextChanged += (sender, args) =>
                     {
                         valueByName[name].Value = TextBoxUtils.TryParseFloat((TextBox)sender);
+                    };
+                    break;
+                case ValueEnums.ValueType.Double:
+                    control.TextChanged += (sender, args) =>
+                    {
+                        valueByName[name].Value = TextBoxUtils.TryParseDouble((TextBox)sender);
                     };
                     break;
                 case ValueEnums.ValueType.Int:

@@ -11,29 +11,37 @@
         public enum ValueType
         {
             /// <summary>
-            /// A <see cref="uint"/> value. Creates a label and text box.
+            /// A <see cref="uint"/> value. 
             /// </summary>
             UintFlag,
 
             /// <summary>
-            /// A <see cref="float"/> value. Creates a label, text box, and slider.
+            /// A <see cref="float"/> value. 
             /// </summary>
             Float,
 
             /// <summary>
-            /// An <see cref="int"/> value. Creates a label, text box, and slider.
+            /// A <see cref="double"/> value.
+            /// </summary>
+            Double,
+
+            /// <summary>
+            /// An <see cref="int"/> value. 
             /// </summary>
             Int,
+
             /// <summary>
-            /// A <see cref="bool"/> value. Creates a check box.
+            /// A <see cref="bool"/> value.
             /// </summary>
             Bool,
+
             /// <summary>
-            /// A <see cref="System.Enum"/> value. Creates a combo box for all possible enumerations.
+            /// A <see cref="System.Enum"/> value.
             /// </summary>
             Enum,
+
             /// <summary>
-            /// A <see cref="string"/> value. Creates a label and text box.
+            /// A <see cref="string"/> value.
             /// </summary>
             String
         }
