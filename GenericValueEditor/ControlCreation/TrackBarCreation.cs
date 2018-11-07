@@ -24,22 +24,43 @@ namespace GenericValueEditor.ControlCreation
 
         private static void CreateScrollEvent(ValueEnums.ValueType type, string name, TrackBar control, Dictionary<string, EditorValue> valueByName)
         {
+            var editorValue = valueByName[name];
+            var min = editorValue.TrackBarInfo.Min;
+            var max = editorValue.TrackBarInfo.Max;
+
             switch (type)
             {
                 case ValueEnums.ValueType.Float:
+                    // Set initial value.
+                    TrackBarUtils.SetFloat((float)editorValue.Value, control, (float)min, (float)max);
+
                     control.Scroll += (sender, args) =>
                     {
-                        valueByName[name].EnableTrackBarUpdates = false;
-                        float newValue = TrackBarUtils.GetFloat(control, 0, 1);
-                        valueByName[name].Value = newValue;
+                        editorValue.EnableTrackBarUpdates = false;
+                        float newValue = TrackBarUtils.GetFloat(control, (float)min, (float)max);
+                        editorValue.Value = newValue;
+                    };
+                    break;
+                case ValueEnums.ValueType.Double:
+                    // Set initial value.
+                    TrackBarUtils.SetDouble((double)editorValue.Value, control, (double)min, (double)max);
+
+                    control.Scroll += (sender, args) =>
+                    {
+                        editorValue.EnableTrackBarUpdates = false;
+                        double newValue = TrackBarUtils.GetDouble(control, min, max);
+                        editorValue.Value = newValue;
                     };
                     break;
                 case ValueEnums.ValueType.Int:
+                    // Set initial value.
+                    TrackBarUtils.SetInt((int)editorValue.Value, control, (int)min, (int)max);
+
                     control.Scroll += (sender, args) =>
                     {
-                        valueByName[name].EnableTrackBarUpdates = false;
-                        int newIntValue = TrackBarUtils.GetInt(control, -128, 128);
-                        valueByName[name].Value = newIntValue;
+                        editorValue.EnableTrackBarUpdates = false;
+                        int newIntValue = TrackBarUtils.GetInt(control, (int)min, (int)max);
+                        editorValue.Value = newIntValue;
                     };
                     break;
                 default:
