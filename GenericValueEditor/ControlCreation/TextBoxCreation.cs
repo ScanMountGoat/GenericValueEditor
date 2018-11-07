@@ -36,9 +36,11 @@ namespace GenericValueEditor.ControlCreation
         private static void CreateTextChangedEvent(ValueEnums.ValueType type, string name, TextBox control,
             Dictionary<string, EditorValue> valueByName)
         {
+            if (!parseFunctionByType.ContainsKey(type))
+                throw new NotSupportedException($"Conversion of text to type {type.ToString()} is not supported.");
+
             control.TextChanged += (sender, args) =>
             {
-                // TODO: What happens when the type isn't in the dictionary?
                 valueByName[name].Value = parseFunctionByType[type](control);
             };
         }
