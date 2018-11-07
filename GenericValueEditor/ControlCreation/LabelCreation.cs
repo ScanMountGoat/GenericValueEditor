@@ -10,8 +10,7 @@ namespace GenericValueEditor.ControlCreation
             var label = new Label()
             {
                 Text = text,
-                Width = 100,
-                //AutoSize = true,
+                AutoSize = true,
                 Anchor = AnchorStyles.Right,
             };
 

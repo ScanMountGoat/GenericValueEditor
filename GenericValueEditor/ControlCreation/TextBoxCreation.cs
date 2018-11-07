@@ -24,7 +24,6 @@ namespace GenericValueEditor.ControlCreation
             {
                 Text = valueByName[name].ToString(),
                 Anchor = AnchorStyles.Right | AnchorStyles.Left,
-                Width = 150
             };
 
             tableLayout.Controls.Add(textBox, col, row);

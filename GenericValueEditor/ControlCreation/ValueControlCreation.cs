@@ -9,11 +9,10 @@ namespace GenericValueEditor.ControlCreation
         public static void AddPropertyControls(string name, ValueEnums.ValueType type, Control parent, 
             Dictionary<string, EditorValue> valueByName)
         {
-            Panel panel = new Panel();
+            // HACK: Don't hard code the height.
+            Panel panel = new Panel() { Height = 50 };
 
             TableLayoutPanel tableLayout = CreatePropertyTableLayout(3);
-            tableLayout.ColumnStyles[0].Width = 25;
-            tableLayout.ColumnStyles[1].Width = 75;
 
             AddPropertyControlsToTableLayout(name, type, tableLayout, valueByName);
 
@@ -132,16 +131,19 @@ namespace GenericValueEditor.ControlCreation
             {
                 Dock = DockStyle.Fill,
                 RowCount = 1,
-                ColumnCount = columnCount
+                ColumnCount = columnCount,
+                CellBorderStyle = TableLayoutPanelCellBorderStyle.None
             };
  
             tableLayout.SuspendLayout();
 
             // TODO: This scaling only sort of works.
             tableLayout.ColumnStyles.Clear();
-            for (int i = 0; i < tableLayout.ColumnCount; i++)
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15));
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15));
+            for (int i = 2; i < tableLayout.ColumnCount; i++)
             {
-                ColumnStyle style = new ColumnStyle(SizeType.AutoSize, 100 / tableLayout.ColumnCount);
+                ColumnStyle style = new ColumnStyle(SizeType.Percent, 100 / tableLayout.ColumnCount);
                 tableLayout.ColumnStyles.Add(style);
             }
 
