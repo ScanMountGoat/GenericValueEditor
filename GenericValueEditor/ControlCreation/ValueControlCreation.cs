@@ -136,22 +136,27 @@ namespace GenericValueEditor.ControlCreation
                 ColumnCount = columnCount,
                 CellBorderStyle = TableLayoutPanelCellBorderStyle.None
             };
- 
-            tableLayout.SuspendLayout();
 
-            // TODO: This scaling only sort of works.
+            tableLayout.SuspendLayout();
+            SetColumnStyles(tableLayout);
+            tableLayout.ResumeLayout();
+
+            return tableLayout;
+        }
+
+        private static void SetColumnStyles(TableLayoutPanel tableLayout)
+        {
             tableLayout.ColumnStyles.Clear();
+
+            // Make the labels and text boxes small.
             tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15));
             tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15));
+
             for (int i = 2; i < tableLayout.ColumnCount; i++)
             {
                 ColumnStyle style = new ColumnStyle(SizeType.Percent, 100 / tableLayout.ColumnCount);
                 tableLayout.ColumnStyles.Add(style);
             }
-
-            tableLayout.ResumeLayout();
-            return tableLayout;
         }
-
     }
 }
