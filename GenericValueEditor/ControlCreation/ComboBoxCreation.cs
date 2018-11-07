@@ -16,8 +16,10 @@ namespace GenericValueEditor.ControlCreation
                 Width = 150
             };
 
-            // TODO: Throw exception if it isn't an enum.
-            Type enumType = valueByName[name].Value.GetType();
+            // Throw a more meaningful error before combo box setup fails.
+            var enumType = valueByName[name].Value.GetType();
+            if (!enumType.IsEnum)
+                throw new ArgumentException($"The Enum editor type is incompatible with member type {enumType.ToString()}.");
 
             InitializeComboBoxItems(valueByName, name, enumType, control);
             CreateComboBoxChangedEvent(name, enumType, valueByName, control);

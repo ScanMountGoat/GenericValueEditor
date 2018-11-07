@@ -5,11 +5,9 @@ using System.Reflection;
 namespace GenericValueEditor
 {
     /// <summary>
-    /// Contains methods to create controls for editing an object.
-    /// The controls used are determined by decorating members with
-    /// the appropriate attributes.
+    /// Contains methods to create controls for editing an object's member variables.
     /// </summary>
-    /// <typeparam name="T">The type of the editable object. The member attributes 
+    /// <typeparam name="T">The reference type of the editable object. The member attributes 
     /// determine what editor controls are used.</typeparam>
     public class EditorGenerator<T> where T : class
     {
