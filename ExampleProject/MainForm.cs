@@ -4,20 +4,23 @@ namespace ExampleProject
 {
     public partial class MainForm : Form
     {
-        SampleClass objectToEdit = new SampleClass();
+        SampleClass object1 = new SampleClass();
+        SampleClass object2 = new SampleClass();
 
         public MainForm()
         {
             InitializeComponent();
 
-            var objectEditor = new GenericValueEditor.EditorGenerator(objectToEdit);
+            var objectEditor = new GenericValueEditor.EditorGenerator<SampleClass>(object1);
             objectEditor.AddEditorControls(flowLayoutPanel1);
 
+            objectEditor.ObjectToEdit = object2;
         }
 
         private void flowLayoutPanel1_Resize(object sender, System.EventArgs e)
         {
             GenericValueEditor.Utils.GuiUtils.ScaleControlsHorizontallyToLayoutWidth(flowLayoutPanel1);
+            System.Diagnostics.Debug.WriteLine(object2.TextValue);
         }
     }
 }
