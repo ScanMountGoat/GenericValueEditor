@@ -1,28 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace GenericValueEditor
 {
     /// <summary>
-    /// TODO: Better name for this class.
-    /// Creates controls for editing an object.
+    /// Contains methods to create controls for editing an object.
+    /// The controls used are determined by decorating members with
+    /// the appropriate attributes.
     /// </summary>
-    public class ObjectEditor
+    public class EditorGenerator
     {
         private Dictionary<string, EditorValue> valueByName = new Dictionary<string, EditorValue>();
 
         /// <summary>
-        /// Creates a new editor object to edit the properties of <paramref name="objectToEdit"/>.
+        /// Creates a generator to edit the members of <paramref name="objectToEdit"/>.
         /// </summary>
-        /// <param name="objectToEdit"></param>
-        public ObjectEditor(object objectToEdit)
+        /// <param name="objectToEdit">The object used to generate the editor controls</param>
+        public EditorGenerator(object objectToEdit)
         {
-            InitializeEditableProperties(objectToEdit);
-            InitializeEditableFields(objectToEdit);
+            InitializeEditableMembers(objectToEdit);
         }
 
         /// <summary>
-        /// Adds controls to <paramref name="parent"/> to edit all the marked properties and fields of the given object.
+        /// Adds editor controls to <paramref name="parent"/>. A <see cref="System.Windows.Forms.FlowLayoutPanel"/>
+        /// is recommended.
         /// </summary>
         /// <param name="parent">The control to which the editor controls will be added</param>
         public void AddEditorControls(System.Windows.Forms.Control parent)
@@ -41,6 +43,12 @@ namespace GenericValueEditor
 
                 ToggleControlVisiblityOnClick(spacer, addedControls);
             }
+        }
+
+        private void InitializeEditableMembers(object objectToEdit)
+        {
+            InitializeEditableProperties(objectToEdit);
+            InitializeEditableFields(objectToEdit);
         }
 
         private static void ToggleControlVisiblityOnClick(System.Windows.Forms.Control spacer, List<System.Windows.Forms.Control> addedControls)
@@ -89,74 +97,59 @@ namespace GenericValueEditor
 
         private void InitializeEditableProperties(object objectToEdit)
         {
-            // Determine what types to use based on reflection and attributes for the given class.
-            Type type = objectToEdit.GetType();
-            foreach (var property in type.GetProperties())
+            foreach (var property in objectToEdit.GetType().GetProperties())
             {
-                // TODO: Account for multiple attributes of the same type.
-                var editorValue = new EditorValue();
-                string name = null;
-                foreach (var attribute in property.GetCustomAttributes(true))
-                {
-                    if (attribute is EditorInfo)
-                    {
-                        var info = (EditorInfo)attribute;
-                        name = info.Name;
-                        editorValue.EditorInfo = info;
-                    }
-                    else if (attribute is TrackBarInfo)
-                    {
-                        editorValue.TrackBarInfo = (TrackBarInfo)attribute;
-                    }
-                }
-
-                // Ignore properties with no attributes.
-                if (name != null)
-                {
-                    // Initialize the value.
-                    editorValue.Value = property.GetValue(objectToEdit, null);
-
-                    valueByName.Add(name, editorValue);
-
-                    SetUpObjectUpdateOnValueChange(objectToEdit, property, editorValue);
-                }
+                AddEditorValue(objectToEdit, property);
             }
         }
 
         private void InitializeEditableFields(object objectToEdit)
         {
-            // Determine what types to use based on reflection and attributes for the given class.
-            Type type = objectToEdit.GetType();
-            foreach (var field in type.GetFields())
+            foreach (var field in objectToEdit.GetType().GetFields())
             {
-                // TODO: Account for multiple attributes of the same type.
-                var editorValue = new EditorValue();
-                string name = null;
-                foreach (var attribute in field.GetCustomAttributes(true))
+                AddEditorValue(objectToEdit, field);
+            }
+        }
+
+        private void AddEditorValue(object objectToEdit, MemberInfo memberInfo)
+        {
+            var editorValue = new EditorValue();
+            string name = null;
+            foreach (var attribute in memberInfo.GetCustomAttributes(true))
+            {
+                if (attribute is EditorInfo info)
                 {
-                    if (attribute is EditorInfo)
-                    {
-                        var info = (EditorInfo)attribute;
-                        name = info.Name;
-                        editorValue.EditorInfo = info;
-                    }
-                    else if (attribute is TrackBarInfo)
-                    {
-                        editorValue.TrackBarInfo = (TrackBarInfo)attribute;
-                    }
+                    name = info.Name;
+                    editorValue.EditorInfo = info;
                 }
-
-                // Ignore fields with no attributes.
-                if (name != null)
+                else if (attribute is TrackBarInfo trackBarInfo)
                 {
-                    // Initialize the value.
-                    editorValue.Value = field.GetValue(objectToEdit);
-
-                    valueByName.Add(name, editorValue);
-
-                    SetUpObjectUpdateOnValueChange(objectToEdit, field, editorValue);
+                    editorValue.TrackBarInfo = trackBarInfo;
                 }
             }
+
+            // Ignore members with no attributes.
+            if (name != null)
+            {
+                if (memberInfo is PropertyInfo property)
+                    SetInitialValue(objectToEdit, editorValue, name, property);
+                else if (memberInfo is FieldInfo field)
+                    SetInitialValue(objectToEdit, editorValue, name, field);
+            }
+        }
+
+        private void SetInitialValue(object objectToEdit, EditorValue editorValue, string name, PropertyInfo property)
+        {
+            editorValue.Value = property.GetValue(objectToEdit, null);
+            valueByName.Add(name, editorValue);
+            SetUpObjectUpdateOnValueChange(objectToEdit, property, editorValue);
+        }
+
+        private void SetInitialValue(object objectToEdit, EditorValue editorValue, string name, FieldInfo field)
+        {
+            editorValue.Value = field.GetValue(objectToEdit);
+            valueByName.Add(name, editorValue);
+            SetUpObjectUpdateOnValueChange(objectToEdit, field, editorValue);
         }
 
         private static void SetUpObjectUpdateOnValueChange(object objectToEdit, System.Reflection.PropertyInfo property, EditorValue editorValue)

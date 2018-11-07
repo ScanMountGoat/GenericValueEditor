@@ -10,7 +10,7 @@ namespace ExampleProject
         {
             InitializeComponent();
 
-            var objectEditor = new GenericValueEditor.ObjectEditor(objectToEdit);
+            var objectEditor = new GenericValueEditor.EditorGenerator(objectToEdit);
             objectEditor.AddEditorControls(flowLayoutPanel1);
         }
 

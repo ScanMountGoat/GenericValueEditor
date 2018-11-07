@@ -56,7 +56,7 @@
     <Compile Include="ControlCreation\TrackBarCreation.cs" />
     <Compile Include="EditorInfo.cs" />
     <Compile Include="EditorValue.cs" />
-    <Compile Include="ObjectEditor.cs" />
+    <Compile Include="EditorGenerator.cs" />
     <Compile Include="TrackBarInfo.cs" />
     <Compile Include="Utils\GuiUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
