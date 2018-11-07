@@ -6,21 +6,23 @@ namespace GenericValueEditor.ControlCreation
 {
     internal static class ValueControlCreation
     {
-        public static void AddPropertyControls(string name, ValueEnums.ValueType type, Control parent, 
+        public static Control AddPropertyControls(string name, ValueEnums.ValueType type, Control parent, 
             Dictionary<string, EditorValue> valueByName)
         {
             // HACK: Don't hard code the height.
-            Panel panel = new Panel() { Height = 50 };
+            Panel mainPanel = new Panel() { Height = 50 };
 
             TableLayoutPanel tableLayout = CreatePropertyTableLayout(3);
 
             AddPropertyControlsToTableLayout(name, type, tableLayout, valueByName);
 
-            panel.Controls.Add(tableLayout);
+            mainPanel.Controls.Add(tableLayout);
 
             // Resize the table layout to fill the form.
-            panel.Width = parent.Width;
-            parent.Controls.Add(panel);
+            mainPanel.Width = parent.Width;
+            parent.Controls.Add(mainPanel);
+
+            return mainPanel;
         }
 
         private static void AddPropertyControlsToTableLayout(string name, ValueEnums.ValueType type, 

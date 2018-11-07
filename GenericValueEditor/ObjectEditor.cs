@@ -31,19 +31,36 @@ namespace GenericValueEditor
 
             foreach (var pair in editorValuesByGroup)
             {
-                AddGroupSpacer(parent, pair.Key);
+                var spacer = AddGroupSpacer(parent, pair.Key);
 
+                var addedControls = new List<System.Windows.Forms.Control>();
                 foreach (var editorValue in pair.Value)
                 {
-                    ControlCreation.ValueControlCreation.AddPropertyControls(editorValue.EditorInfo.Name, editorValue.EditorInfo.Type, parent, valueByName);
+                    addedControls.Add(ControlCreation.ValueControlCreation.AddPropertyControls(editorValue.EditorInfo.Name, editorValue.EditorInfo.Type, parent, valueByName));
                 }
+
+                ToggleControlVisiblityOnClick(spacer, addedControls);
             }
         }
 
-        private static void AddGroupSpacer(System.Windows.Forms.Control parent, string name)
+        private static void ToggleControlVisiblityOnClick(System.Windows.Forms.Control spacer, List<System.Windows.Forms.Control> addedControls)
+        {
+            if (spacer != null)
+            {
+                spacer.Click += (sender, args) =>
+                {
+                    foreach (var control in addedControls)
+                    {
+                        control.Visible = !control.Visible;
+                    }
+                };
+            }
+        }
+
+        private static System.Windows.Forms.Control AddGroupSpacer(System.Windows.Forms.Control parent, string name)
         {
             if (string.IsNullOrEmpty(name))
-                return;
+                return null;
 
             var spacerButton = new System.Windows.Forms.Button()
             {
@@ -51,6 +68,7 @@ namespace GenericValueEditor
                 Width = parent.Width
             };
             parent.Controls.Add(spacerButton);
+            return spacerButton;
         }
 
         private Dictionary<string, List<EditorValue>> GroupValuesByGroupName()
