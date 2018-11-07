@@ -16,11 +16,9 @@
         }
         object valueObject = null;
 
-        public EditorInfo EditorInfo { get; set; } = null;
+        public EditInfo EditorInfo { get; set; } = null;
 
         public TrackBarInfo TrackBarInfo { get; set; } = null;
-
-        // Prevents the text box from updating the track bar.
         public bool EnableTrackBarUpdates { get; set; } = false;
 
         public override string ToString()

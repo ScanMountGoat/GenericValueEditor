@@ -54,7 +54,7 @@
     <Compile Include="ControlCreation\LabelCreation.cs" />
     <Compile Include="ControlCreation\TextBoxCreation.cs" />
     <Compile Include="ControlCreation\TrackBarCreation.cs" />
-    <Compile Include="EditorInfo.cs" />
+    <Compile Include="EditInfo.cs" />
     <Compile Include="EditorValue.cs" />
     <Compile Include="EditorGenerator.cs" />
     <Compile Include="TrackBarInfo.cs" />

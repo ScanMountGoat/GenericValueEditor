@@ -117,7 +117,7 @@ namespace GenericValueEditor
             string name = null;
             foreach (var attribute in memberInfo.GetCustomAttributes(true))
             {
-                if (attribute is EditorInfo info)
+                if (attribute is EditInfo info)
                 {
                     name = info.Name;
                     editorValue.EditorInfo = info;
