@@ -16,7 +16,7 @@
         }
         object valueObject = null;
 
-        public ValueEnums.ValueType Type { get; set; }
+        public EditorInfo EditorInfo { get; set; } = null;
 
         public TrackBarInfo TrackBarInfo { get; set; } = null;
 

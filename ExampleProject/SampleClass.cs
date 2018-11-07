@@ -14,29 +14,32 @@ namespace ExampleProject
 
         public int X { get; } = 5;
 
-        [EditorInfo("int1", ValueEnums.ValueType.Int)]
+        [EditorInfo("Enable Experimental Feature", ValueEnums.ValueType.Bool, "")]
+        public bool EnableFeature { get; set; }
+
+        [EditorInfo("Name", ValueEnums.ValueType.String, "")]
+        public string TextValue { get; set; } = "sample text";
+
+        [EditorInfo("Index", ValueEnums.ValueType.Int, "")]
         [TrackBarInfo(-128, 128)]
         public int IntValue { get; set; } = -1;
 
-        [EditorInfo("unsigned flag", ValueEnums.ValueType.UintFlag)]
+        [EditorInfo("Flags", ValueEnums.ValueType.UintFlag, "")]
         public uint UintValue { get; set; } = 2;
 
-        [EditorInfo("float1", ValueEnums.ValueType.Float)]
+        [EditorInfo("X", ValueEnums.ValueType.Float, "Position")]
         [TrackBarInfo(-2, 1.5)]
         public float FloatValue1 { get; set; } = 3.5f;
 
-        [EditorInfo("float2", ValueEnums.ValueType.Float)]
-        public float floatField = 0.5f;
+        [EditorInfo("Y", ValueEnums.ValueType.Float, "Position")]
+        public float FloatValue2 { get; set; } = 0.5f;
 
-        [EditorInfo("double1", ValueEnums.ValueType.Double)]
+        [EditorInfo("Z", ValueEnums.ValueType.Double, "Position")]
         [TrackBarInfo(0, 1)]
-        public double doubleField = 0.5;
+        public double DoubleValue { get; set; } = 0.5;
 
-        [EditorInfo("string1", ValueEnums.ValueType.String)]
-        public string TextValue { get; set; } = "sample text sample text sample text";
-
-        [EditorInfo("enum1", ValueEnums.ValueType.Enum)]
-        public SampleEnum EnumValue { get; set; } = SampleEnum.B;
+        [EditorInfo("Type", ValueEnums.ValueType.Enum, "Misc")]
+        public SampleEnum enumValue = SampleEnum.B;
 
         public override string ToString()
         {

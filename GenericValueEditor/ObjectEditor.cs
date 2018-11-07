@@ -27,10 +27,46 @@ namespace GenericValueEditor
         /// <param name="parent">The control to which the editor controls will be added</param>
         public void AddEditorControls(System.Windows.Forms.Control parent)
         {
-            foreach (var editorValue in valueByName)
+            Dictionary<string, List<EditorValue>> editorValuesByGroup = GroupValuesByGroupName();
+
+            foreach (var pair in editorValuesByGroup)
             {
-                ControlCreation.ValueControlCreation.AddPropertyControls(editorValue.Key, editorValue.Value.Type, parent, valueByName);
+                AddGroupSpacer(parent, pair.Key);
+
+                foreach (var editorValue in pair.Value)
+                {
+                    ControlCreation.ValueControlCreation.AddPropertyControls(editorValue.EditorInfo.Name, editorValue.EditorInfo.Type, parent, valueByName);
+                }
             }
+        }
+
+        private static void AddGroupSpacer(System.Windows.Forms.Control parent, string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                return;
+
+            var spacerButton = new System.Windows.Forms.Button()
+            {
+                Text = name,
+                Width = parent.Width
+            };
+            parent.Controls.Add(spacerButton);
+        }
+
+        private Dictionary<string, List<EditorValue>> GroupValuesByGroupName()
+        {
+            var editorValuesByGroup = new Dictionary<string, List<EditorValue>>();
+            foreach (var pair in valueByName)
+            {
+                string groupName = pair.Value.EditorInfo.GroupName;
+
+                if (!editorValuesByGroup.ContainsKey(groupName))
+                    editorValuesByGroup.Add(groupName, new List<EditorValue>());
+
+                editorValuesByGroup[groupName].Add(pair.Value);
+            }
+
+            return editorValuesByGroup;
         }
 
         private void InitializeEditableProperties(object objectToEdit)
@@ -48,7 +84,7 @@ namespace GenericValueEditor
                     {
                         var info = (EditorInfo)attribute;
                         name = info.Name;
-                        editorValue.Type = info.Type;
+                        editorValue.EditorInfo = info;
                     }
                     else if (attribute is TrackBarInfo)
                     {
@@ -84,7 +120,7 @@ namespace GenericValueEditor
                     {
                         var info = (EditorInfo)attribute;
                         name = info.Name;
-                        editorValue.Type = info.Type;
+                        editorValue.EditorInfo = info;
                     }
                     else if (attribute is TrackBarInfo)
                     {
