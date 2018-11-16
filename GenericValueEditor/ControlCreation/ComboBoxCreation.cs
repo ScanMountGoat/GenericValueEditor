@@ -33,8 +33,7 @@ namespace GenericValueEditor.ControlCreation
         {
             control.SelectedIndexChanged += (sender, args) =>
             {
-                object value = Enum.Parse(enumType, control.SelectedItem.ToString());
-                valueByName[name].Value = value;
+                valueByName[name].Value = Enum.Parse(enumType, control.SelectedItem.ToString());
             };
         }
 

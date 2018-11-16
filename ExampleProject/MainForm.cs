@@ -15,6 +15,9 @@ namespace ExampleProject
             objectEditor.AddEditorControls(flowLayoutPanel1);
 
             objectEditor.ObjectToEdit = object2;
+
+            var menu = new TableViewMenu();
+            menu.Show();
         }
 
         private void flowLayoutPanel1_Resize(object sender, System.EventArgs e)
