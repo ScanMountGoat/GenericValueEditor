@@ -22,9 +22,9 @@ namespace ExampleProject
         {
             InitializeComponent();
 
-            // TODO: Data error event?
             var dataTable = new DataTable();
             dataGridView1.DataSource = dataTable;
+            dataGridView1.DataError += DataGridView1_DataError;
 
             // Add columns for each editable field.
             dataTable.Columns.Add("col1", typeof(string));
@@ -34,6 +34,12 @@ namespace ExampleProject
             AddEnumComboBoxColumn(typeof(TestEnum));
 
             dataTable.Columns.Add("col3", typeof(int));
+        }
+
+        private void DataGridView1_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            // Invalid values will be replaced with the old value when leaving the cell.
+            e.Cancel = false;
         }
 
         private void AddEnumComboBoxColumn(Type enumType)
