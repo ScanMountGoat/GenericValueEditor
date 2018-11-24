@@ -40,10 +40,7 @@ namespace GenericValueEditor.ControlCreation
         private static void InitializeComboBoxItems(Dictionary<string, EditorValue> valueByName, string name, Type enumType, ComboBox control)
         {
             control.Items.Clear();
-            foreach (var enumName in Enum.GetNames(enumType))
-            {
-                control.Items.Add(enumName.ToString());
-            }
+            control.Items.AddRange(Enum.GetNames(enumType));
 
             control.SelectedItem = valueByName[name].Value.ToString();
         }
