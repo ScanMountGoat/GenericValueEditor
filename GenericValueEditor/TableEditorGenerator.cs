@@ -13,6 +13,10 @@ namespace GenericValueEditor
     /// determine what editor controls are used.</typeparam>
     public class TableEditorGenerator<T>
     {
+        // TODO: This is kind of gross.
+        // Store a separate dictionary for each object.
+        private List<Dictionary<string, EditorValue>> valueByNameCollection = new List<Dictionary<string, EditorValue>>();
+
         /// <summary>
         /// Initializes the rows and columns for the <see cref="DataGridView"/>.
         /// </summary>
@@ -22,29 +26,42 @@ namespace GenericValueEditor
         {
             // TODO: Return a new grid view rather than modifying an existing one.
             var dataTable = CreateDataTable(dataGridView);
+
+            valueByNameCollection.Clear();
+            for (int i = 0; i < objectsToEdit.Count; i++)
+            {
+                valueByNameCollection.Add(new Dictionary<string, EditorValue>());
+                Utils.ValueEditingUtils.UpdateEditorValues(objectsToEdit[i], valueByNameCollection[i]);
+            }
+
             CreateMemberColumns(dataTable, dataGridView);
             InitializeTableValues(dataTable, objectsToEdit);
         }
 
-        private static void InitializeTableValues(DataTable dataTable, List<T> objectsToEdit)
+        private void InitializeTableValues(DataTable dataTable, List<T> objectsToEdit)
         {
-            // TODO: Initialize values using reflection.
+            foreach (var dict in valueByNameCollection)
+            {
+                // The column names should be the same as the dictionary keys.
+                var values = new List<object>();
+                foreach (DataColumn col in dataTable.Columns)
+                {
+                    values.Add(dict[col.ColumnName].Value);
+                }
+                dataTable.Rows.Add(values.ToArray());
+            }
         }
 
-        private static void CreateMemberColumns(DataTable dataTable, DataGridView dataGridView)
+        private void CreateMemberColumns(DataTable dataTable, DataGridView dataGridView)
         {
             // TODO: How to handle order?
             // TODO: Skip enum and use combo box.
             // TODO: Custom types?
             // TODO: Only use members with the proper attribute.
-            foreach (var info in typeof(T).GetProperties())
+            // TODO: Empty list?
+            foreach (var pair in valueByNameCollection[0])
             {
-                dataTable.Columns.Add(new DataColumn(info.Name, info.PropertyType));
-            }
-
-            foreach (var info in typeof(T).GetFields())
-            {
-                dataTable.Columns.Add(new DataColumn(info.Name, info.FieldType));
+                dataTable.Columns.Add(new DataColumn(pair.Key, pair.Value.Value.GetType()));
             }
         }
 

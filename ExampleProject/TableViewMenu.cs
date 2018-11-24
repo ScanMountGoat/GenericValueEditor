@@ -9,7 +9,7 @@ namespace ExampleProject
         {
             new SampleClass(),
             new SampleClass(),
-            new SampleClass()
+            new SampleClass() { EnableFeature = true, TextValue = "test" }
         };
 
         public TableViewMenu()
