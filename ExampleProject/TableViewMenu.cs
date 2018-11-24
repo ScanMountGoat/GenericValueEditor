@@ -34,9 +34,19 @@ namespace ExampleProject
             dataGridView1.DataError += DataGridView1_DataError;
             dataGridView1.CellEndEdit += DataGridView1_CellEndEdit;
 
-            // Add columns for each editable field.
-            dataTable.Columns.Add("col1", typeof(float));
-            dataTable.Columns.Add("col2", typeof(float));
+            // TODO: How to handle order?
+            // TODO: Skip enum and use combo box.
+            // TODO: Custom types?
+            // TODO: Only use members with the proper attribute.
+            foreach (var info in typeof(SampleClass).GetProperties())
+            {
+                dataTable.Columns.Add(new DataColumn(info.Name, info.PropertyType));
+            }
+
+            foreach (var info in typeof(SampleClass).GetFields())
+            {
+                dataTable.Columns.Add(new DataColumn(info.Name, info.FieldType));
+            }
 
             // These can be added in any order.
             AddEnumComboBoxColumn(typeof(TestEnum));
@@ -44,8 +54,8 @@ namespace ExampleProject
             int rowIndex = 0;
             foreach (var item in objectsToEdit)
             {
+                // TODO: Initialize values using reflection.
                 dataTable.Rows.Add(item.FloatValue1, item.FloatValue2);
-                // TODO: Add combo box enum values.
                 rowIndex++;
             }
         }
