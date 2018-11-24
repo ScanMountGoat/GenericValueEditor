@@ -57,6 +57,7 @@
     <Compile Include="EditInfo.cs" />
     <Compile Include="EditorValue.cs" />
     <Compile Include="EditorGenerator.cs" />
+    <Compile Include="TableEditorGenerator.cs" />
     <Compile Include="TrackBarInfo.cs" />
     <Compile Include="Utils\GuiUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
