@@ -45,7 +45,7 @@ namespace GenericValueEditor.Utils
             return editorValuesByGroup;
         }
 
-        public static void InitializeEditableProperties(object objectToEdit, Dictionary<string, EditorValue> valueByName)
+        private static void InitializeEditableProperties(object objectToEdit, Dictionary<string, EditorValue> valueByName)
         {
             foreach (var property in objectToEdit.GetType().GetProperties())
             {
@@ -53,7 +53,7 @@ namespace GenericValueEditor.Utils
             }
         }
 
-        public static void InitializeEditableFields(object objectToEdit, Dictionary<string, EditorValue> valueByName)
+        private static void InitializeEditableFields(object objectToEdit, Dictionary<string, EditorValue> valueByName)
         {
             foreach (var field in objectToEdit.GetType().GetFields())
             {
@@ -61,7 +61,7 @@ namespace GenericValueEditor.Utils
             }
         }
 
-        public static void AddEditorValue(object objectToEdit, MemberInfo memberInfo, Dictionary<string, EditorValue> valueByName)
+        private static void AddEditorValue(object objectToEdit, MemberInfo memberInfo, Dictionary<string, EditorValue> valueByName)
         {
             var editorValue = new EditorValue();
             string name = null;
@@ -88,7 +88,7 @@ namespace GenericValueEditor.Utils
             }
         }
 
-        public static void SetInitialValue(object objectToEdit, EditorValue editorValue, string name, PropertyInfo property,
+        private static void SetInitialValue(object objectToEdit, EditorValue editorValue, string name, PropertyInfo property,
             Dictionary<string, EditorValue> valueByName)
         {
             editorValue.Value = property.GetValue(objectToEdit, null);
@@ -96,7 +96,7 @@ namespace GenericValueEditor.Utils
             SetUpObjectUpdateOnValueChange(objectToEdit, property, editorValue);
         }
 
-        public static void SetInitialValue(object objectToEdit, EditorValue editorValue, string name, FieldInfo field,
+        private static void SetInitialValue(object objectToEdit, EditorValue editorValue, string name, FieldInfo field,
             Dictionary<string, EditorValue> valueByName)
         {
             editorValue.Value = field.GetValue(objectToEdit);
@@ -104,7 +104,7 @@ namespace GenericValueEditor.Utils
             SetUpObjectUpdateOnValueChange(objectToEdit, field, editorValue);
         }
 
-        public static void SetUpObjectUpdateOnValueChange(object objectToEdit, PropertyInfo property, EditorValue editorValue)
+        private static void SetUpObjectUpdateOnValueChange(object objectToEdit, PropertyInfo property, EditorValue editorValue)
         {
             // Modify the object's property value.
             editorValue.OnValueChanged += (sender, args) =>
@@ -113,7 +113,7 @@ namespace GenericValueEditor.Utils
             };
         }
 
-        public static void SetUpObjectUpdateOnValueChange(object objectToEdit, FieldInfo field, EditorValue editorValue)
+        private static void SetUpObjectUpdateOnValueChange(object objectToEdit, FieldInfo field, EditorValue editorValue)
         {
             // Modify the object's property value.
             editorValue.OnValueChanged += (sender, args) =>
