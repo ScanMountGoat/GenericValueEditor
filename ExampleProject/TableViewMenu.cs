@@ -7,7 +7,7 @@ namespace ExampleProject
     {
         private List<SampleClass> objectsToEdit = new List<SampleClass>()
         {
-            new SampleClass(),
+            new SampleClass() { enumValue = SampleClass.SampleEnum.A },
             new SampleClass(),
             new SampleClass() { EnableFeature = true, TextValue = "test" }
         };

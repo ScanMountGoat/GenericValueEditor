@@ -46,7 +46,15 @@ namespace GenericValueEditor
                 var values = new List<object>();
                 foreach (DataColumn col in dataTable.Columns)
                 {
-                    values.Add(dict[col.ColumnName].Value);
+                    var editorValue = dict[col.ColumnName];
+                    //if (editorValue.Value.GetType().IsEnum)
+                    //{
+                    //    // TODO: How to handle enums?
+                    //}
+                    //else
+                    {
+                        values.Add(dict[col.ColumnName].Value);
+                    }
                 }
                 dataTable.Rows.Add(values.ToArray());
             }
@@ -54,14 +62,20 @@ namespace GenericValueEditor
 
         private void CreateMemberColumns(DataTable dataTable, DataGridView dataGridView)
         {
-            // TODO: How to handle order?
-            // TODO: Skip enum and use combo box.
-            // TODO: Custom types?
-            // TODO: Only use members with the proper attribute.
             // TODO: Empty list?
             foreach (var pair in valueByNameCollection[0])
             {
-                dataTable.Columns.Add(new DataColumn(pair.Key, pair.Value.Value.GetType()));
+                var type = pair.Value.Value.GetType();
+
+                var col = new DataColumn(pair.Key, type);
+                dataTable.Columns.Add(col);
+
+                if (type.IsEnum)
+                {
+                    // Only use the combo box column to avoid invalid values.
+                    dataGridView.Columns[pair.Key].Visible = false;
+                    AddEnumComboBoxColumn(pair.Key, type, dataGridView);
+                }
             }
         }
 
@@ -88,17 +102,17 @@ namespace GenericValueEditor
             return dataTable;
         }
 
-        private static void AddEnumComboBoxColumn(Type enumType, DataGridView dataGridView)
+        private static void AddEnumComboBoxColumn(string columnName, Type enumType, DataGridView dataGridView)
         {
             // Only allow enums to use combo boxes.
             if (!enumType.IsEnum)
                 throw new ArgumentException($"{enumType.ToString()} is not an enum.");
 
-            var comboBoxColumn = new DataGridViewComboBoxColumn();
-            foreach (var enumName in Enum.GetNames(enumType))
+            var comboBoxColumn = new DataGridViewComboBoxColumn()
             {
-                comboBoxColumn.Items.Add(enumName.ToString());
-            }
+                DataSource = Enum.GetNames(enumType),
+                DataPropertyName = columnName
+            };
 
             dataGridView.Columns.Add(comboBoxColumn);
         }
