@@ -1,6 +1,5 @@
-﻿using System;
+﻿using GenericValueEditor.Utils;
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace GenericValueEditor
 {
@@ -23,7 +22,7 @@ namespace GenericValueEditor
             set
             {
                 objectToEdit = value;
-                UpdateEditorValues(objectToEdit);
+                ValueEditingUtils.UpdateEditorValues(objectToEdit, valueByName);
             }
         }
         private T objectToEdit = null;
@@ -44,7 +43,7 @@ namespace GenericValueEditor
         /// <param name="parent">The control to which the editor controls will be added</param>
         public void AddEditorControls(System.Windows.Forms.Control parent)
         {
-            Dictionary<string, List<EditorValue>> editorValuesByGroup = GroupValuesByGroupName();
+            Dictionary<string, List<EditorValue>> editorValuesByGroup = ValueEditingUtils.GroupValuesByGroupName(valueByName);
 
             foreach (var pair in editorValuesByGroup)
             {
@@ -58,15 +57,6 @@ namespace GenericValueEditor
 
                 ToggleControlVisiblityOnClick(spacer, addedControls);
             }
-        }
-
-        private void UpdateEditorValues(object objectToEdit)
-        {
-            // Allow for calling this method multiple times.
-            valueByName.Clear();
-
-            InitializeEditableProperties(objectToEdit);
-            InitializeEditableFields(objectToEdit);
         }
 
         private static void ToggleControlVisiblityOnClick(System.Windows.Forms.Control spacer, List<System.Windows.Forms.Control> addedControls)
@@ -95,97 +85,6 @@ namespace GenericValueEditor
             };
             parent.Controls.Add(spacerButton);
             return spacerButton;
-        }
-
-        private Dictionary<string, List<EditorValue>> GroupValuesByGroupName()
-        {
-            var editorValuesByGroup = new Dictionary<string, List<EditorValue>>();
-            foreach (var pair in valueByName)
-            {
-                string groupName = pair.Value.EditorInfo.GroupName;
-
-                if (!editorValuesByGroup.ContainsKey(groupName))
-                    editorValuesByGroup.Add(groupName, new List<EditorValue>());
-
-                editorValuesByGroup[groupName].Add(pair.Value);
-            }
-
-            return editorValuesByGroup;
-        }
-
-        private void InitializeEditableProperties(object objectToEdit)
-        {
-            foreach (var property in objectToEdit.GetType().GetProperties())
-            {
-                AddEditorValue(objectToEdit, property);
-            }
-        }
-
-        private void InitializeEditableFields(object objectToEdit)
-        {
-            foreach (var field in objectToEdit.GetType().GetFields())
-            {
-                AddEditorValue(objectToEdit, field);
-            }
-        }
-
-        private void AddEditorValue(object objectToEdit, MemberInfo memberInfo)
-        {
-            var editorValue = new EditorValue();
-            string name = null;
-            foreach (var attribute in memberInfo.GetCustomAttributes(true))
-            {
-                if (attribute is EditInfo info)
-                {
-                    name = info.Name;
-                    editorValue.EditorInfo = info;
-                }
-                else if (attribute is TrackBarInfo trackBarInfo)
-                {
-                    editorValue.TrackBarInfo = trackBarInfo;
-                }
-            }
-
-            // Ignore members with no attributes.
-            if (name != null)
-            {
-                if (memberInfo is PropertyInfo property)
-                    SetInitialValue(objectToEdit, editorValue, name, property);
-                else if (memberInfo is FieldInfo field)
-                    SetInitialValue(objectToEdit, editorValue, name, field);
-            }
-        }
-
-        private void SetInitialValue(object objectToEdit, EditorValue editorValue, string name, PropertyInfo property)
-        {
-            editorValue.Value = property.GetValue(objectToEdit, null);
-            valueByName.Add(name, editorValue);
-            SetUpObjectUpdateOnValueChange(objectToEdit, property, editorValue);
-        }
-
-        private void SetInitialValue(object objectToEdit, EditorValue editorValue, string name, FieldInfo field)
-        {
-            editorValue.Value = field.GetValue(objectToEdit);
-            valueByName.Add(name, editorValue);
-            SetUpObjectUpdateOnValueChange(objectToEdit, field, editorValue);
-        }
-
-        private static void SetUpObjectUpdateOnValueChange(object objectToEdit, System.Reflection.PropertyInfo property, EditorValue editorValue)
-        {
-            // Modify the object's property value.
-            editorValue.OnValueChanged += (sender, args) =>
-            {
-                property.SetValue(objectToEdit, Convert.ChangeType(editorValue.Value, property.PropertyType), null);
-            };
-        }
-
-        private static void SetUpObjectUpdateOnValueChange(object objectToEdit, System.Reflection.FieldInfo field, EditorValue editorValue)
-        {
-            // Modify the object's property value.
-            editorValue.OnValueChanged += (sender, args) =>
-            {
-                field.SetValue(objectToEdit, Convert.ChangeType(editorValue.Value, field.FieldType));
-            };
         }
     }
 }

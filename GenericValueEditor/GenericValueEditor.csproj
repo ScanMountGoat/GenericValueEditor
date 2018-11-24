@@ -63,6 +63,7 @@
     <Compile Include="Utils\TextBoxUtils.cs" />
     <Compile Include="Utils\TrackBarUtils.cs" />
     <Compile Include="ControlCreation\ValueControlCreation.cs" />
+    <Compile Include="Utils\ValueEditingUtils.cs" />
     <Compile Include="ValueEnums.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
