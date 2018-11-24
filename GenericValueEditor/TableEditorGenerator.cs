@@ -65,7 +65,7 @@ namespace GenericValueEditor
             }
         }
 
-        private static DataTable CreateDataTable(DataGridView dataGridView)
+        private DataTable CreateDataTable(DataGridView dataGridView)
         {
             var dataTable = new DataTable();
 
@@ -79,7 +79,10 @@ namespace GenericValueEditor
 
             dataGridView.CellEndEdit += (sender, args) =>
             {
-                System.Diagnostics.Debug.WriteLine($"[{args.ColumnIndex},  {args.RowIndex}] = {dataGridView[args.ColumnIndex, args.RowIndex].Value.ToString()}");
+                // Update the value.
+                var col = dataTable.Columns[args.ColumnIndex];
+                var newValue = dataGridView[args.ColumnIndex, args.RowIndex].Value;
+                valueByNameCollection[args.RowIndex][col.ColumnName].Value = newValue;
             };
 
             return dataTable;

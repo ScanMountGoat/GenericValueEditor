@@ -41,5 +41,10 @@ namespace ExampleProject
 
         [EditInfo("Type", ValueEnums.ValueType.Enum, groupName: "Misc")]
         public SampleEnum enumValue = SampleEnum.B;
+
+        public override string ToString()
+        {
+            return $"{EnableFeature.ToString()} {FloatValue1.ToString()} {FloatValue2.ToString()} {DoubleValue.ToString()}";
+        }
     }
 }

@@ -18,6 +18,17 @@ namespace ExampleProject
 
             var tableGenerator = new GenericValueEditor.TableEditorGenerator<SampleClass>();
             tableGenerator.InitializeDataGridView(dataGridView1, objectsToEdit);
+
+            dataGridView1.CellEndEdit += DataGridView1_CellEndEdit;
+        }
+
+        private void DataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("New Edit:");
+            foreach (var item in objectsToEdit)
+            {
+                System.Diagnostics.Debug.WriteLine(item.ToString());
+            }
         }
     }
 }
