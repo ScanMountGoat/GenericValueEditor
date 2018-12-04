@@ -14,10 +14,13 @@ namespace GenericValueEditor.ControlCreation
                 Checked = true,
                 Text = name,
                 AutoSize = true,
-                Anchor = AnchorStyles.Right
+                Anchor = AnchorStyles.Left
             };
 
             tableLayout.Controls.Add(control, col, row);
+
+            // Fill all columns, so the text isn't cut off.
+            tableLayout.SetColumnSpan(control, tableLayout.ColumnCount);
 
             control.CheckedChanged += (sender, args) =>
             {
