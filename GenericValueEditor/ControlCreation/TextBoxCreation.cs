@@ -23,7 +23,8 @@ namespace GenericValueEditor.ControlCreation
             var textBox = new TextBox()
             {
                 Text = valueByName[name].ToString(),
-                Anchor = AnchorStyles.Right | AnchorStyles.Left,
+                Dock = DockStyle.Fill,
+                //Anchor = AnchorStyles.Right | AnchorStyles.Left,
             };
 
             tableLayout.Controls.Add(textBox, col, row);

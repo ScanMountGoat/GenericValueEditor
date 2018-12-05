@@ -9,10 +9,10 @@ namespace GenericValueEditor.ControlCreation
         public static Control AddPropertyControls(string name, ValueEnums.ValueType type, Control parent, 
             Dictionary<string, EditorValue> valueByName)
         {
-            // HACK: Don't hard code the height.
-            Panel mainPanel = new Panel() { Height = 50 };
+            var mainPanel = new Panel();
 
-            TableLayoutPanel tableLayout = CreatePropertyTableLayout(3);
+            var tableLayout = CreatePropertyTableLayout(3);
+            tableLayout.Dock = DockStyle.Fill;
 
             AddPropertyControlsToTableLayout(name, type, tableLayout, valueByName);
 
@@ -20,6 +20,9 @@ namespace GenericValueEditor.ControlCreation
 
             // Resize the table layout to fill the form.
             mainPanel.Width = parent.Width;
+
+            // Make sure the rows are densely packed in the parent layout.
+            mainPanel.Height = 30;
             parent.Controls.Add(mainPanel);
 
             return mainPanel;
@@ -131,7 +134,6 @@ namespace GenericValueEditor.ControlCreation
         {
             var tableLayout = new TableLayoutPanel()
             {
-                Dock = DockStyle.Fill,
                 RowCount = 1,
                 ColumnCount = columnCount,
                 CellBorderStyle = TableLayoutPanelCellBorderStyle.None
@@ -139,6 +141,7 @@ namespace GenericValueEditor.ControlCreation
 
             tableLayout.SuspendLayout();
             SetColumnStyles(tableLayout);
+            //SetRowStyles(tableLayout);
             tableLayout.ResumeLayout();
 
             return tableLayout;
@@ -154,8 +157,19 @@ namespace GenericValueEditor.ControlCreation
 
             for (int i = 2; i < tableLayout.ColumnCount; i++)
             {
-                ColumnStyle style = new ColumnStyle(SizeType.Percent, 100 / tableLayout.ColumnCount);
+                var style = new ColumnStyle(SizeType.Percent, 100 / tableLayout.ColumnCount);
                 tableLayout.ColumnStyles.Add(style);
+            }
+        }
+
+        private static void SetRowStyles(TableLayoutPanel tableLayout)
+        {
+            tableLayout.RowStyles.Clear();
+
+            for (int i = 0; i < tableLayout.RowCount; i++)
+            {
+                var style = new RowStyle(SizeType.AutoSize);
+                tableLayout.RowStyles.Add(style);
             }
         }
     }

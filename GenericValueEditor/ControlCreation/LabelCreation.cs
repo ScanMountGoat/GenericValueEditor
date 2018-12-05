@@ -6,12 +6,11 @@ namespace GenericValueEditor.ControlCreation
     {
         public static Label AddLabel(TableLayoutPanel tableLayout, int row, int col, string text)
         {
-            // Setting auto size is necessary for anchoring.
             var label = new Label()
             {
                 Text = text,
                 AutoSize = true,
-                Anchor = AnchorStyles.Right,
+                Dock = DockStyle.Right,
             };
 
             tableLayout.Controls.Add(label, col, row);
