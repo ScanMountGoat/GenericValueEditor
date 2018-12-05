@@ -9,6 +9,16 @@ namespace GenericValueEditor.ControlCreation
         public static ComboBox AddComboBox(TableLayoutPanel tableLayout, int row, int col,
             string name, Dictionary<string, EditorValue> valueByName)
         {
+            var control = CreateComboBox(tableLayout, row, col, name, valueByName);
+
+            // Fill all remaining columns.
+            tableLayout.SetColumnSpan(control, 2);
+
+            return control;
+        }
+
+        private static ComboBox CreateComboBox(TableLayoutPanel tableLayout, int row, int col, string name, Dictionary<string, EditorValue> valueByName)
+        {
             var control = new ComboBox()
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
@@ -25,7 +35,6 @@ namespace GenericValueEditor.ControlCreation
             CreateComboBoxChangedEvent(name, enumType, valueByName, control);
 
             tableLayout.Controls.Add(control, col, row);
-
             return control;
         }
 
