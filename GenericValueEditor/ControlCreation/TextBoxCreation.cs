@@ -24,7 +24,6 @@ namespace GenericValueEditor.ControlCreation
             {
                 Text = valueByName[name].ToString(),
                 Dock = DockStyle.Fill,
-                //Anchor = AnchorStyles.Right | AnchorStyles.Left,
             };
 
             tableLayout.Controls.Add(textBox, col, row);

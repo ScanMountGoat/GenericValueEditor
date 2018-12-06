@@ -16,7 +16,7 @@ namespace ExampleProject
         public int X { get; set; } = 5;
 
         [EditInfo("Enable Experimental Feature", ValueEnums.ValueType.Bool)]
-        public bool EnableFeature { get; set; }
+        public bool EnableFeature { get; set; } = false;
 
         [EditInfo("Name", ValueEnums.ValueType.String)]
         public string TextValue { get; set; } = "sample text";

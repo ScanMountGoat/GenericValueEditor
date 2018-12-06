@@ -22,6 +22,8 @@ namespace GenericValueEditor.ControlCreation
             // Fill all columns, so the text isn't cut off.
             tableLayout.SetColumnSpan(control, tableLayout.ColumnCount);
 
+            control.Checked = (bool)valueByName[name].Value;
+
             control.CheckedChanged += (sender, args) =>
             {
                 valueByName[name].Value = ((CheckBox)sender).Checked;
