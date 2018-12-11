@@ -53,6 +53,7 @@
     <Compile Include="ControlCreation\CheckBoxCreation.cs" />
     <Compile Include="ControlCreation\ComboBoxCreation.cs" />
     <Compile Include="ControlCreation\LabelCreation.cs" />
+    <Compile Include="ControlCreation\TableLayoutCreation.cs" />
     <Compile Include="ControlCreation\TextBoxCreation.cs" />
     <Compile Include="ControlCreation\TrackBarCreation.cs" />
     <Compile Include="EditInfo.cs" />

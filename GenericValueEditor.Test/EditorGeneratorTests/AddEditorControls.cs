@@ -1,6 +1,4 @@
-﻿using GenericValueEditor;
-using GenericValueEditor.Utils;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GenericValueEditor.Test.EditorGeneratorTests
 {

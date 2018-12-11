@@ -11,7 +11,7 @@ namespace GenericValueEditor.ControlCreation
         {
             var mainPanel = new Panel();
 
-            var tableLayout = CreatePropertyTableLayout(3);
+            var tableLayout = TableLayoutCreation.CreatePropertyTableLayout(3);
             tableLayout.Dock = DockStyle.Fill;
 
             AddPropertyControlsToTableLayout(name, type, tableLayout, valueByName);
@@ -128,49 +128,6 @@ namespace GenericValueEditor.ControlCreation
                 if (valueByName[name].EnableTrackBarUpdates)
                     TrackBarUtils.SetInt((int)valueByName[name].Value, intTrackBar, min, max);
             };
-        }
-
-        private static TableLayoutPanel CreatePropertyTableLayout(int columnCount)
-        {
-            var tableLayout = new TableLayoutPanel()
-            {
-                RowCount = 1,
-                ColumnCount = columnCount,
-                CellBorderStyle = TableLayoutPanelCellBorderStyle.None
-            };
-
-            tableLayout.SuspendLayout();
-            SetColumnStyles(tableLayout);
-            //SetRowStyles(tableLayout);
-            tableLayout.ResumeLayout();
-
-            return tableLayout;
-        }
-
-        private static void SetColumnStyles(TableLayoutPanel tableLayout)
-        {
-            tableLayout.ColumnStyles.Clear();
-
-            // Make the labels and text boxes small.
-            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15));
-            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15));
-
-            for (int i = 2; i < tableLayout.ColumnCount; i++)
-            {
-                var style = new ColumnStyle(SizeType.Percent, 100 / tableLayout.ColumnCount);
-                tableLayout.ColumnStyles.Add(style);
-            }
-        }
-
-        private static void SetRowStyles(TableLayoutPanel tableLayout)
-        {
-            tableLayout.RowStyles.Clear();
-
-            for (int i = 0; i < tableLayout.RowCount; i++)
-            {
-                var style = new RowStyle(SizeType.AutoSize);
-                tableLayout.RowStyles.Add(style);
-            }
         }
     }
 }
