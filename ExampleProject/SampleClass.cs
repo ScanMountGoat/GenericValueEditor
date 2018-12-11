@@ -26,7 +26,7 @@ namespace ExampleProject
         public int IntValue { get; set; } = -1;
 
         [EditInfo("Flags", ValueEnums.ValueType.UintFlag)]
-        public uint UintValue { get; set; } = 2;
+        public uint UintValue { get; set; } = 255;
 
         [EditInfo("X", ValueEnums.ValueType.Float, groupName: "Position")]
         [TrackBarInfo(-2, 1.5)]

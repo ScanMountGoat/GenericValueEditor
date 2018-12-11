@@ -26,6 +26,10 @@ namespace GenericValueEditor.ControlCreation
                 Dock = DockStyle.Fill,
             };
 
+            // Use hex to display unsigned values.
+            if (type == ValueEnums.ValueType.UintFlag)
+                textBox.Text = ((uint)valueByName[name].Value).ToString("X");
+
             tableLayout.Controls.Add(textBox, col, row);
 
             CreateTextChangedEvent(type, name, textBox, valueByName);
