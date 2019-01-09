@@ -13,9 +13,12 @@ namespace GenericValueEditor
     /// determine what editor controls are used.</typeparam>
     public class TableEditorGenerator<T>
     {
-        // TODO: This is kind of gross.
-        // Store a separate dictionary for each object.
-        private List<Dictionary<string, EditorValue>> valueByNameCollection = new List<Dictionary<string, EditorValue>>();
+        private class EditableObject
+        {
+            public Dictionary<string, EditorValue> ValueByName { get; } = new Dictionary<string, EditorValue>();
+        }
+
+        private readonly List<EditableObject> objectsToEdit = new List<EditableObject>();
 
         /// <summary>
         /// Initializes the rows and columns for the <see cref="DataGridView"/>.
@@ -27,36 +30,44 @@ namespace GenericValueEditor
             // TODO: Return a new grid view rather than modifying an existing one.
             var dataTable = CreateDataTable(dataGridView);
 
-            valueByNameCollection.Clear();
+            this.objectsToEdit.Clear();
             for (int i = 0; i < objectsToEdit.Count; i++)
             {
-                valueByNameCollection.Add(new Dictionary<string, EditorValue>());
-                Utils.ValueEditingUtils.UpdateEditorValues(objectsToEdit[i], valueByNameCollection[i]);
+                this.objectsToEdit.Add(new EditableObject());
+                Utils.ValueEditingUtils.UpdateEditorValues(objectsToEdit[i], this.objectsToEdit[i].ValueByName);
             }
 
             CreateMemberColumns(dataTable, dataGridView);
-            InitializeTableValues(dataTable, objectsToEdit);
+            InitializeTableValues(dataTable);
         }
 
-        private void InitializeTableValues(DataTable dataTable, List<T> objectsToEdit)
+        private void InitializeTableValues(DataTable dataTable)
         {
-            foreach (var dict in valueByNameCollection)
+            foreach (var editableObject in objectsToEdit)
             {
-                // The column names should be the same as the dictionary keys.
-                var values = new List<object>();
-                foreach (DataColumn col in dataTable.Columns)
-                {
-                    var editorValue = dict[col.ColumnName];
-                    values.Add(editorValue.Value);
-                }
+                var values = GetPropertyValues(dataTable, editableObject);
                 dataTable.Rows.Add(values.ToArray());
             }
         }
 
+        private static List<object> GetPropertyValues(DataTable dataTable, EditableObject editableObject)
+        {
+            var values = new List<object>();
+
+            // The column names should be the same as the dictionary keys.
+            foreach (DataColumn col in dataTable.Columns)
+            {
+                var editorValue = editableObject.ValueByName[col.ColumnName];
+                values.Add(editorValue.Value);
+            }
+
+            return values;
+        }
+
         private void CreateMemberColumns(DataTable dataTable, DataGridView dataGridView)
         {
-            // TODO: Empty list?
-            foreach (var pair in valueByNameCollection[0])
+            // TODO: Can columns be generated from an empty list?
+            foreach (var pair in objectsToEdit[0].ValueByName)
             {
                 var type = pair.Value.Value.GetType();
 
@@ -64,13 +75,6 @@ namespace GenericValueEditor
                     AddEnumComboBoxColumn(pair.Key, type, dataGridView);
                 else
                     dataTable.Columns.Add(new DataColumn(pair.Key, type));
-
-                //if (type.IsEnum)
-                //{
-                //    // Only use the combo box column to avoid invalid values.
-                //    dataGridView.Columns[pair.Key].Visible = false;
-                //    AddEnumComboBoxColumn(pair.Key, type, dataGridView);
-                //}
             }
         }
 
@@ -86,12 +90,12 @@ namespace GenericValueEditor
             {
                 // Update the value.
                 var cell = dataGridView.CurrentCell;
-                var type = valueByNameCollection[args.RowIndex][cell.OwningColumn.Name].Value.GetType();
+                var type = objectsToEdit[args.RowIndex].ValueByName[cell.OwningColumn.Name].Value.GetType();
 
                 if (type.IsEnum)
-                    valueByNameCollection[args.RowIndex][cell.OwningColumn.Name].Value = Enum.Parse(type, cell.Value.ToString());
+                    objectsToEdit[args.RowIndex].ValueByName[cell.OwningColumn.Name].Value = Enum.Parse(type, cell.Value.ToString());
                 else
-                    valueByNameCollection[args.RowIndex][cell.OwningColumn.Name].Value = cell.Value; 
+                    objectsToEdit[args.RowIndex].ValueByName[cell.OwningColumn.Name].Value = cell.Value; 
             };
 
             return dataTable;

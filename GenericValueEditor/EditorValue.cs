@@ -1,8 +1,9 @@
 ﻿namespace GenericValueEditor
 {
-    // TODO: Don't make this public.
-    // The table view utility methods need to be part of this project.
-    public class EditorValue
+    /// <summary>
+    /// Stores the information for how a name/value pair should be edited.
+    /// </summary>
+    internal class EditorValue
     {
         public delegate void ValueChangedEventHandler(object sender, object value);
         public event ValueChangedEventHandler OnValueChanged;
