@@ -47,14 +47,7 @@ namespace GenericValueEditor
                 foreach (DataColumn col in dataTable.Columns)
                 {
                     var editorValue = dict[col.ColumnName];
-                    //if (editorValue.Value.GetType().IsEnum)
-                    //{
-                    //    // TODO: How to handle enums?
-                    //}
-                    //else
-                    {
-                        values.Add(dict[col.ColumnName].Value);
-                    }
+                    values.Add(editorValue.Value);
                 }
                 dataTable.Rows.Add(values.ToArray());
             }
@@ -67,15 +60,17 @@ namespace GenericValueEditor
             {
                 var type = pair.Value.Value.GetType();
 
-                var col = new DataColumn(pair.Key, type);
-                dataTable.Columns.Add(col);
-
                 if (type.IsEnum)
-                {
-                    // Only use the combo box column to avoid invalid values.
-                    dataGridView.Columns[pair.Key].Visible = false;
                     AddEnumComboBoxColumn(pair.Key, type, dataGridView);
-                }
+                else
+                    dataTable.Columns.Add(new DataColumn(pair.Key, type));
+
+                //if (type.IsEnum)
+                //{
+                //    // Only use the combo box column to avoid invalid values.
+                //    dataGridView.Columns[pair.Key].Visible = false;
+                //    AddEnumComboBoxColumn(pair.Key, type, dataGridView);
+                //}
             }
         }
 
@@ -85,21 +80,27 @@ namespace GenericValueEditor
 
             dataGridView.DataSource = dataTable;
 
-            dataGridView.DataError += (sender, args) =>
-            {
-                // Invalid values will be replaced with the old value when leaving the cell.
-                args.Cancel = false;
-            };
+            SetUpDataErrorEvent(dataGridView);
 
             dataGridView.CellEndEdit += (sender, args) =>
             {
                 // Update the value.
-                var col = dataTable.Columns[args.ColumnIndex];
-                var newValue = dataGridView[args.ColumnIndex, args.RowIndex].Value;
-                valueByNameCollection[args.RowIndex][col.ColumnName].Value = newValue;
+                var cell = dataGridView.CurrentCell;
+                var type = valueByNameCollection[args.RowIndex][cell.OwningColumn.Name].Value.GetType();
+
+                if (type.IsEnum)
+                    valueByNameCollection[args.RowIndex][cell.OwningColumn.Name].Value = Enum.Parse(type, cell.Value.ToString());
+                else
+                    valueByNameCollection[args.RowIndex][cell.OwningColumn.Name].Value = cell.Value; 
             };
 
             return dataTable;
+        }
+
+        private static void SetUpDataErrorEvent(DataGridView dataGridView)
+        {
+            // Invalid values will be replaced with the old value when leaving the cell.
+            dataGridView.DataError += (sender, args) => args.Cancel = false;
         }
 
         private static void AddEnumComboBoxColumn(string columnName, Type enumType, DataGridView dataGridView)
@@ -110,6 +111,7 @@ namespace GenericValueEditor
 
             var comboBoxColumn = new DataGridViewComboBoxColumn()
             {
+                Name = columnName,
                 DataSource = Enum.GetNames(enumType),
                 DataPropertyName = columnName
             };

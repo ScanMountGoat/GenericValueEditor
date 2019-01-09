@@ -29,6 +29,7 @@ namespace ExampleProject
             {
                 System.Diagnostics.Debug.WriteLine(item.ToString());
             }
+            System.Diagnostics.Debug.WriteLine("");
         }
     }
 }

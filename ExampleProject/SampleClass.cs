@@ -28,6 +28,9 @@ namespace ExampleProject
         [EditInfo("Flags", ValueEnums.ValueType.UintFlag)]
         public uint UintValue { get; set; } = 255;
 
+        [EditInfo("Type", ValueEnums.ValueType.Enum, groupName: "Misc")]
+        public SampleEnum enumValue = SampleEnum.B;
+
         [EditInfo("X", ValueEnums.ValueType.Float, groupName: "Position")]
         [TrackBarInfo(-2, 1.5)]
         public float FloatValue1 { get; set; } = 3.5f;
@@ -39,12 +42,9 @@ namespace ExampleProject
         [TrackBarInfo(0, 1)]
         public double DoubleValue { get; set; } = 0.5;
 
-        [EditInfo("Type", ValueEnums.ValueType.Enum, groupName: "Misc")]
-        public SampleEnum enumValue = SampleEnum.B;
-
         public override string ToString()
         {
-            return $"{EnableFeature.ToString()} {FloatValue1.ToString()} {FloatValue2.ToString()} {DoubleValue.ToString()}";
+            return $"{EnableFeature.ToString()} {TextValue} {enumValue}";
         }
     }
 }
